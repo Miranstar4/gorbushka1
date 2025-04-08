@@ -1,0 +1,19 @@
+﻿version: '3'
+services:
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegrambotapp:latest
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - VIRTUAL_HOST=bot.hozyainduhi.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=bot.hozyainduhi.ru
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

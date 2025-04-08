@@ -1,0 +1,114 @@
+﻿@page
+@model AdminPanelMarket.Pages.order.IndexModel
+
+@{
+    ViewData["Title"] = "Заказы";
+}
+
+<h1>Заказы</h1>
+<div class="row">
+    <h2>Активные заказы</h2>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Товар
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Дата создания
+            </th>
+            <th>
+                Последнее изменение
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+                Покупатель
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.OrderClear) {
+            var localcost = item.ProductType == null ? item.ProductNavigation.Cost : item.ProductTypeNavigation.Cost;
+            var localname = item.ProductType == null ? item.ProductNavigation.Name : item.ProductTypeNavigation.Name;
+            <tr>
+            <td>
+                @localname
+            </td>
+            <td>
+                @localcost
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fio) (@Html.DisplayFor(modelItem => item.UserNavigation.Username))
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Посмотреть</a>
+            </td>
+        </tr>
+       }
+    </tbody>
+</table>
+<div class="row">
+    <h2>Отмененные заказы</h2>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Товар
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Дата создания
+            </th>
+            <th>
+                Последнее изменение
+            </th>
+            <th>
+                Статус
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.OrderDelete) {
+            var localcost = item.ProductType == null ? item.ProductNavigation.Cost : item.ProductTypeNavigation.Cost;
+            var localname = item.ProductType == null ? item.ProductNavigation.Name : item.ProductTypeNavigation.Name;
+            <tr>
+            <td>
+                @localname
+            </td>
+            <td>
+                @localcost
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Посмотреть</a>
+            </td>
+        </tr>
+       }
+    </tbody>
+</table>

@@ -1,0 +1,58 @@
+﻿@page
+@model AdminPanelMarket.Pages.product.CreateModel
+
+@{
+    ViewData["Title"] = "Создать товар";
+}
+
+<h1>Создать</h1>
+
+<h4>Товар</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Subcategory" class="control-label">Подкатегория</label>
+                <select asp-for="Product.Subcategory" class ="form-control" asp-items="ViewBag.Subcategory"></select>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Name" class="control-label">Наименование</label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Description" class="control-label">Описание (неиспользуется)</label>
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Cost" class="control-label">Цена</label>
+                <input asp-for="Product.Cost" class="form-control" />
+                <span asp-validation-for="Product.Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Score" class="control-label">Баллы</label>
+                <input asp-for="Product.Score" class="form-control" />
+                <span asp-validation-for="Product.Score" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.DefaultColor" class="control-label">Цвет раскраски по умолчанию</label>
+                <input asp-for="Product.DefaultColor" type="color" title="Выберите цвет" class="form-control form-control-color" />
+                <span asp-validation-for="Product.DefaultColor" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <input type="submit" value="Создать товар" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Вернутся назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

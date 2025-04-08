@@ -1,0 +1,93 @@
+﻿@page
+@model AdminPanelMarket.Pages.category.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Category.Id" />
+            <div class="form-group">
+                <label asp-for="Category.Name" class="control-label"></label>
+                <input asp-for="Category.Name" class="form-control" />
+                <span asp-validation-for="Category.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Category.Image" class="control-label">Название картинки</label>
+                <input asp-for="Category.Image" id="imageName" class="form-control" />
+                <span asp-validation-for="Category.Image" class="text-danger"></span>
+                <img class="image-enter" src="https://backend.hozyaintelegram.ru/api/Categories/image/@Model.Category.Image">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Выбрать картинку
+                </button>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-images">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.files) {
+                        <tr>
+                            <td>
+                                @item
+                            </td>
+                            <td>
+                                <img src="https://backend.hozyaintelegram.ru/api/Categories/image/@item">
+                            </td>
+                            <td>
+                                <button type="button" onclick="clickEnter('@item');" class="btn btn-primary">Выбрать</button>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-close-html" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function clickEnter(text) {
+    $('#imageName').val(text);
+    $('.modal-close-html').click();
+    $('.image-enter').attr("src","https://backend.hozyaintelegram.ru/api/Categories/image/"+text);
+}
+</script>

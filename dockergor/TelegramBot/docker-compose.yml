@@ -1,0 +1,20 @@
+﻿version: '3'
+services:
+  myapptelegrambotappGorbushka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegrambotapp-gorbushka:latest
+    container_name: telegrambotapp-gorbushka
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - VIRTUAL_HOST=bot.hozyaintelegram.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=bot.hozyaintelegram.ru
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

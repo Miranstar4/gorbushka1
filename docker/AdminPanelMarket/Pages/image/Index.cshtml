@@ -1,0 +1,67 @@
+﻿@page
+@model AdminPanelMarket.Pages.image.IndexModel
+@{
+}
+<div class="row">
+    <div class="col">
+        <form method="post" enctype="multipart/form-data">
+            <p class="text-warning">Загружайте фотографии в формате png</p>
+            <div class="form-group m-md-3">
+                <label asp-for="Filename" class="control-label">Имя файла</label>
+                <input type="text" class="form-control" asp-for="Filename" />
+            </div>
+            <div class="form-group m-md-3">
+                <input type="file" class="form-control" asp-for="Upload" />
+            </div>
+            <input class="btn btn-primary" type="submit" value="Добавить фотографию" />
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table table-images">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.files) {
+                        <tr>
+                            <td>
+                                @item
+                            </td>
+                            <td>
+                                <img src="https://backend.hozyainduhi.ru/api/Categories/image/@item">
+                            </td>
+                            <td>
+                                <button type="button" onclick="deleteImage('@item');" class="btn btn-primary">Удалить</button>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function deleteImage(name) {
+        $.ajax({
+            url: 'https://backend.hozyainduhi.ru/api/Categories/image/'+name,
+            type: 'POST',
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+</script>
+

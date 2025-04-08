@@ -1,0 +1,217 @@
+﻿@page
+@model AdminPanelMarket.Pages.promocode.EditModel
+
+@{
+    ViewData["Title"] = "Редактировать промокод";
+}
+
+<h1>Редактировать</h1>
+
+<h4>Промокод</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Promocode.Id" />
+            <div class="form-group">
+                <label asp-for="Promocode.Type" class="control-label">Тип</label>
+                <select asp-for="Promocode.Type" class="form-control">
+                    <option value="cena">От цены в деньгах</option>
+                    <option value="cenaprocent">От цены в проценте</option>
+                    <option value="category">От категории в деньгах</option>
+                    <option value="categoryprocent">От категории в проценте</option>
+                    <option value="onlyprocent">Просто процент</option>
+                    <option value="onlysumma">Просто деньги</option>
+                </select>
+                <span asp-validation-for="Promocode.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Promocode.Code" class="control-label">Код промокода</label>
+                <input id="code" asp-for="Promocode.Code" class="form-control" />
+                <span asp-validation-for="Promocode.Code" class="text-danger"></span>
+                <button class="btn btn-primary" type="button" onclick="generateRandomString(6)">Сгенерировать</button>
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="Promocode.BonusProcent" class="control-label">Сколько процентов (если выбран тип процент)</label>
+                <input asp-for="Promocode.BonusProcent" class="form-control" />
+                <span asp-validation-for="Promocode.BonusProcent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Promocode.BonusMoney" class="control-label">Сколько скидка в рублях (если выбран тип в деньгах)</label>
+                <input asp-for="Promocode.BonusMoney" class="form-control" />
+                <span asp-validation-for="Promocode.BonusMoney" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Promocode.PriceСondition" class="control-label">От какой цены работает промокод</label>
+                <input asp-for="Promocode.PriceСondition" class="form-control" />
+                <span asp-validation-for="Promocode.PriceСondition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Promocode.SuccessMessage" class="control-label">Успешное сообщение при применение промокода</label>
+                <input asp-for="Promocode.SuccessMessage" class="form-control" />
+                <span asp-validation-for="Promocode.SuccessMessage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Promocode.ErrorMessage" class="control-label">Сообщение, если не подходит промокод</label>
+                <input asp-for="Promocode.ErrorMessage" class="form-control" />
+                <span asp-validation-for="Promocode.ErrorMessage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<h4>Подкатегории</h4>
+<p>Создать подкатегорию, к которой будет применятся промокод</p>
+<hr />
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Подкатегория</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var promocodeSubcategory in Model.promocodeSubcategories)
+            {
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" value="@promocodeSubcategory.Subcategory" onchange="changePromocode(this)" data-promocode-id="@promocodeSubcategory.Id" id='promocode-name-@promocodeSubcategory.Id'>
+                                <option value=""></option>
+                                @foreach (var subcategory in Model.subcategories)
+                                {
+                                    @if (@promocodeSubcategory.Subcategory == subcategory.Id)
+                                    {
+                                        <option selected value="@subcategory.Id">@subcategory.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@subcategory.Id">@subcategory.Name</option>
+                                    }
+                                    
+                                }
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <button class="btn btn-primary" data-promocode-id="@promocodeSubcategory.Id" type="button" onclick="deleteSubcategory(this)">Удалить</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="button" onclick="addSubcategory(this)">Добавить подкатегорию</button>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a asp-page="./Index">Вернуться назад</a>
+</div>
+
+<script>
+
+    function addSubcategory(row) {
+        $(row).closest('tr').remove();
+        $.ajax({
+            url: '../api/PromocodeSubcategories',
+            type: 'POST',
+            data: JSON.stringify({
+                promocode: '@Model.Promocode.Id'
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+            if (xhr.status != 401) {
+                var newRowHtml = `
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" value="" onchange="changePromocode(this)" data-promocode-id="`+data.id+`" id='promocode-name-`+data.id+`'>
+                                <option value=""></option>
+                                @foreach (var subcategory in Model.subcategories)
+                                {
+                                    <option value="@subcategory.Id">@subcategory.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <button class="btn btn-primary" data-promocode-id="`+data.id+`" type="button" onclick="deleteSubcategory(this)">Удалить</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary" type="button" onclick="addSubcategory(this)">Добавить подкатегорию</button>
+                    </td>
+                    <td></td>
+                </tr>
+                `;
+                $('tbody').append(newRowHtml);
+            }
+            },
+            error: function (xhr, status, e) {
+            console.error(e);
+            },
+        });
+    }
+
+    function changePromocode(row) {
+        var id = $(row).data('promocode-id');
+        let subcategory = $(row).val();
+
+        $.ajax({
+            url: '../api/PromocodeSubcategories/'+id,
+            type: 'PUT',
+            data: JSON.stringify({
+                promocode: '@Model.Promocode.Id',
+                subcategory: subcategory,
+                id: id
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                showSaveToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function deleteSubcategory(row) {
+        var id = $(row).data('promocode-id');
+        $.ajax({
+            url: '../api/PromocodeSubcategories/'+id,
+            type: 'DELETE',
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                $(row).closest('tr').remove();
+                showDeleteToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function removeCharacteristicRow(button) {
+        $(button).closest('tr').remove();
+    }
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

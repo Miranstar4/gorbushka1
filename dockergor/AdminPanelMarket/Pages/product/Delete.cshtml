@@ -1,0 +1,40 @@
+﻿@page
+@model AdminPanelMarket.Pages.product.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить";
+}
+
+<h1>Удаление</h1>
+
+<h3>Вы действительно хотите удалить?</h3>
+<div>
+    <h4>Продукт</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Наименование
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Цена
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Cost)
+        </dd>
+        <dt class="col-sm-2">
+            Бонусы
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Score)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Product.Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-page="./Index">Вернутся назад</a>
+    </form>
+</div>

@@ -1,0 +1,21 @@
+version: '3'
+services:
+  web-gorbushka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: front-gorbushka:latest
+    container_name: front-gorbushka
+    restart: always
+    volumes:
+      - ./dist:/var/www/public
+    environment:
+      - VIRTUAL_HOST=webapp.hozyaintelegram.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=webapp.hozyaintelegram.ru
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

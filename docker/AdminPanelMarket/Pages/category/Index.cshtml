@@ -1,0 +1,63 @@
+﻿@page
+@model AdminPanelMarket.Pages.category.IndexModel
+
+@{
+    ViewData["Title"] = "Категории";
+}
+
+<h1>Все категории</h1>
+
+<p>
+    <a asp-page="Create">Добавить новую категорию</a>
+</p>
+<div class="row">
+    <div class="col">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">🔍</span>
+          <input type="text" class="form-control search-input" placeholder="Поиск...">
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Наименование
+            </th>
+            <th>Картинка</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Category) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <img class="image-enter" src="https://backend.hozyainduhi.ru/api/Categories/image/@item.Image">
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<script>
+    $(".search-input").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".table tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // Если поле поиска пустое, показываем все записи
+    $(".search-input").on("input", function() {
+        if ($(this).val().trim() === "") {
+            $(".table tr").show();
+        }
+    });
+</script>

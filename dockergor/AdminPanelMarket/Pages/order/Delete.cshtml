@@ -1,0 +1,28 @@
+﻿@page
+@model AdminPanelMarket.Pages.order.DeleteModel
+
+@{
+    ViewData["Title"] = "Отменить заказ";
+}
+
+<h1>Delete</h1>
+
+<h3>Вы действительно хотите отменить заказ?</h3>
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Заказ
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.ProductNavigation.Name) (@Html.DisplayFor(model => model.Order.ProductTypeNavigation.Name))
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Order.Id" />
+        <input type="submit" value="Отменить" class="btn btn-danger" /> |
+        <a asp-page="./Index">Вернутся назад</a>
+    </form>
+</div>

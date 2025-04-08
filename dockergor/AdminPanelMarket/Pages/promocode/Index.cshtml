@@ -1,0 +1,65 @@
+﻿@page
+@model AdminPanelMarket.Pages.promocode.IndexModel
+
+@{
+    ViewData["Title"] = "Промокоды";
+}
+
+<h1>Промокоды</h1>
+
+<p>
+    <a asp-page="Create">Создать промокод</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Тип
+            </th>
+            <th>
+                Код
+            </th>
+            <th>
+                Бонус в процентах
+            </th>
+            <th>
+                Бонус в деньгах
+            </th>
+            <th>
+                Требование в сумме
+            </th>
+            <th>
+                Активен?
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Promocode) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BonusProcent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BonusMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriceСondition)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Деактивировать</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

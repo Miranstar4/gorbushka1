@@ -1,0 +1,167 @@
+﻿@page
+@model AdminPanelMarket.Pages.subcategory.EditModel
+
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+<h1>Редактировать</h1>
+
+<h4>Подкатегория</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Subcategory.Id" />
+            <div class="form-group m-md-3">
+                <label asp-for="Subcategory.Category" class="control-label">Категория</label>
+                <select asp-for="Subcategory.Category" class="form-control" asp-items="ViewBag.Category"></select>
+                <span asp-validation-for="Subcategory.Category" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Subcategory.Name" class="control-label">Наименование</label>
+                <input asp-for="Subcategory.Name" class="form-control" />
+                <span asp-validation-for="Subcategory.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <input type="submit" value="Сохранить подкатегорию" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<h4>Характеристики</h4>
+<p>Характеристики сохраняются автоматически</p>
+<hr />
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Порядок</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var characteristic in Model.Characteristics)
+            {
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" onchange="changeCharacteristic(this)" type="text" value="@characteristic.Name" data-ch-id="@characteristic.Id" id='charac-name-@characteristic.Id' />
+                        </div>
+                    </td>
+                    <td>
+                        <input class="form-control" type="number" onchange="changeCharacteristic(this)" value="@characteristic.Order" data-ch-id="@characteristic.Id" id='charac-order-@characteristic.Id' />
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-ch-id="@characteristic.Id" onclick="deleteCharacteristic(this)">Удалить</button>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="button" onclick="addCharacteristicRow(this)">Добавить характеристику</button>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <a asp-page="./Index">Вернутся назад</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+    var newCharacteristicIndex = 1;
+
+    function addCharacteristicRow(row) {
+        $(row).closest('tr').remove();
+        $.ajax({
+            url: '../api/characteristics',
+            type: 'POST',
+            data: JSON.stringify({
+            name: undefined,
+            subcategory: '@Model.Subcategory.Id'
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+            if (xhr.status != 401) {
+                var newRowHtml = `
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" onchange="changeCharacteristic(this)" type="text" data-ch-id="`+data.id+`" id='charac-name-`+data.id+`' />
+                        </div>
+                    </td>
+                    <td>
+                        <input class="form-control" onchange="changeCharacteristic(this)" type="number" value="`+data.order+`" data-ch-id="`+data.id+`" id='charac-order-`+data.id+`' />
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-ch-id="`+data.id+`" type="button" onclick="deleteCharacteristic(this)">Удалить</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary" type="button" onclick="addCharacteristicRow(this)">Добавить характеристику</button>
+                    </td>
+                    <td></td>
+                </tr>
+                `;
+                $('tbody').append(newRowHtml);
+            }
+            },
+            error: function (xhr, status, e) {
+            console.error(e);
+            },
+        });
+    }
+
+    function changeCharacteristic(row) {
+        var id = $(row).data('ch-id');
+        let order = $(row).closest('tr').find('#charac-order-'+id).val(),
+            name = $(row).closest('tr').find('#charac-name-'+id).val();
+
+        $.ajax({
+            url: '../api/characteristics/'+id,
+            type: 'PUT',
+            data: JSON.stringify({
+                name: name,
+                isactive: true,
+                subcategory: '@Model.Subcategory.Id',
+                order: order,
+                id: id
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                showSaveToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function deleteCharacteristic(row) {
+        var id = $(row).data('ch-id');
+        $.ajax({
+            url: '../api/characteristics/'+id,
+            type: 'DELETE',
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                $(row).closest('tr').remove();
+                showDeleteToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function removeCharacteristicRow(button) {
+        $(button).closest('tr').remove();
+    }
+</script>

@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  sqlserver_2019:
+    image: mcr.microsoft.com/mssql/server:2019-CU2-ubuntu-16.04
+    hostname: sqlserver_2019
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=HozyainnGorbushkiPerfumebot699
+    volumes:
+      - type: volume
+        source: data
+        target: /var/opt/mssql
+    networks: 
+      - mssql_default
+networks:
+  mssql_default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450              
+volumes:
+  data:

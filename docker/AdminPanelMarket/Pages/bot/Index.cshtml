@@ -1,0 +1,132 @@
+﻿@page
+@using System.Security.Principal;
+@model IndexModel
+@{
+	ViewData["Title"] = "Посты";
+}
+<style>
+	article {
+  width: 90%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.125rem;
+  padding: 2rem;
+  background-color: rgba(240, 240, 240, 1);
+  border-radius: 10px;
+  box-shadow: 0 15px 20px -10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+article > * + * {
+  margin-top: 1em;
+}
+article:is(h1, h2, h3) + * {
+  margin-top: 0.5em;
+}
+article h1 {
+  font-weight: 900;
+  font-size: 1.5rem;
+  line-height: 1.125;
+}
+article code {
+  background-color: #eee;
+  font-weight: 600;
+  font-family: monospace;
+}
+article ol {
+  counter-reset: sickstuff;
+}
+article ol li {
+  position: relative;
+  padding-left: 32px;
+  counter-increment: sickstuff;
+}
+article ol li + li {
+  margin-top: 0.5em;
+}
+article ol li:before {
+  content: counter(sickstuff);
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: calc((1.125rem * 1.5) - 24px);
+  font-size: 0.75em;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #185adb;
+  color: #fff;
+  font-weight: 600;
+}
+</style>
+<h1>Посты</h1>
+<div class="row">
+    <div class="col">
+        <h4>Последние 10 постов</h4>
+        @foreach(var post in Model._Posts)
+        {
+            <article>
+	            <h1>@post.AdminNavigation.Username (@post.DateSend)</h1>
+	            <p>@post.Text</p>
+            </article>
+        }
+        <!--
+        <article>
+	        <h1>How to create a pop-up without JavaScript</h1>
+	        <p>Ever wanted a pop-up mechanism on your website, but you don't want to use JavaScript? Here's how:</p>
+	        <ol>
+		        <li>Add a <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> to your document</li> 
+		        <li>Insert a <code>&lt;div&gt;</code> to your <code>&lt;details&gt;</code> element</li>
+		        <li>Add a scaling animation to this <code>&lt;div&gt;</code></li>
+		        <li>Add this animation to the <code>&lt;div&gt;</code> when the <code>[open]</code> attribute is toggled on the <code>&lt;details&gt;</code> element</li>
+	        </ol>
+	        <p>Toggle the <strong>How it works</strong> button for more info.</p>
+        </article>
+        -->
+    </div>
+    <div class="col">
+        <h4>Отправить пост</h4>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group m-md-3">
+                <label asp-for="TextPost" class="control-label">Текст сообщения</label>
+                <textarea id="uploadText" class="form-control" asp-for="TextPost"></textarea>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Upload" class="control-label">Изображение (не больше 1мб)</label>
+                <input id="uploadImage" type="file" class="form-control" asp-for="Upload" />
+            </div>
+            <input class="btn btn-primary" type="button" onclick="PreWatch()" value="Предпросмотр" />
+            <input class="btn btn-primary" type="submit" value="Отправить пост" />
+            <p class="text-danger">Внимание! Отправка поста может быть очень долгой, не нужно закрывать окно браузера, пока страница не обновится</p>
+        </form>
+    </div>
+</div>
+<script>
+    function PreWatch() {
+        var fileInput = document.getElementById('uploadImage');
+        var file = fileInput.files[0];
+        var textInput = document.getElementById('uploadText');
+        var text = textInput.value;
+
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('text', text);
+        formData.append('nameadmin', "@User.Identity.Name");
+
+        $.ajax({
+            url: '/api/Code/PreWatch',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log('Server Response: ' + data.message);
+            },
+            error: function (error) {
+                console.error('Error: ' + error);
+            }
+        });
+    }
+</script>

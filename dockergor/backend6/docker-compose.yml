@@ -1,0 +1,23 @@
+﻿version: '3'
+services:
+  myapp-gorbushka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegrambackendapp-gorbushka:latest
+    container_name: telegrambackendapp-gorbushka
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - VIRTUAL_HOST=backend.hozyaintelegram.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=backend.hozyaintelegram.ru
+    volumes:
+      - ./images:/app/images
+      - ./photos:/app/photos
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

@@ -1,0 +1,98 @@
+﻿@page
+@model AdminPanelMarket.Pages.stories.CreateModel
+
+@{
+    ViewData["Title"] = "Создать товар";
+}
+
+<h1>Создать</h1>
+
+<h4>Сторис</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group m-md-3">
+                <label asp-for="_Story.Text" class="control-label">Текст</label>
+                <textarea asp-for="_Story.Text" class="form-control"></textarea>
+                <span asp-validation-for="_Story.Text" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="_Story.Url" class="control-label">Ссылка</label>
+                <input asp-for="_Story.Url" class="form-control" />
+                <span asp-validation-for="_Story.Url" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="_Story.Color" class="control-label">Название картинки</label>
+                <input asp-for="_Story.Color" id="imageName" class="form-control" />
+                <span asp-validation-for="_Story.Color" class="text-danger"></span>
+                <img class="image-enter" src="">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Выбрать картинку
+                </button>
+            </div>
+            <div class="form-group m-md-3">
+                <input type="submit" value="Создать сторис" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Вернутся назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-images">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.files) {
+                        <tr>
+                            <td>
+                                @item
+                            </td>
+                            <td>
+                                <img src="https://backend.hozyainduhi.ru/api/Categories/image/@item">
+                            </td>
+                            <td>
+                                <button type="button" onclick="clickEnter('@item');" class="btn btn-primary">Выбрать</button>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-close-html" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function clickEnter(text) {
+    $('#imageName').val(text);
+    $('.modal-close-html').click();
+    $('.image-enter').attr("src","https://backend.hozyainduhi.ru/api/Categories/image/"+text);
+}
+</script>

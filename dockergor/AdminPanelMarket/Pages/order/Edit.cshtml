@@ -1,0 +1,385 @@
+﻿@page
+@model AdminPanelMarket.Pages.order.EditModel
+
+@{
+    ViewData["Title"] = "Просмотр заказа";
+}
+
+<style>
+    .--dark-theme {
+  --chat-background: rgba(10, 14, 14, 0.95);
+  --chat-panel-background: #131719;
+  --chat-bubble-background: #14181a;
+  --chat-bubble-active-background: #171a1b;
+  --chat-add-button-background: #212324;
+  --chat-send-button-background: #8147fc;
+  --chat-text-color: #a3a3a3;
+  --chat-options-svg: #a3a3a3;
+}
+.chat {
+    width: 40%;
+}
+#chat {
+  background: var(--chat-background);
+  box-sizing: border-box;
+  padding: 1em;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+#chat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+#chat .btn-icon {
+  position: relative;
+  cursor: pointer;
+}
+#chat .btn-icon svg {
+  stroke: #FFF;
+  fill: #FFF;
+  width: 50%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#chat .chat__conversation-board {
+  padding: 1em 0 2em;
+  /*height: calc(100vh - 55px - 2em - 25px * 2 - .5em - 3em);*/
+  overflow: auto;
+  max-height: 60vh;
+}
+#chat .chat__conversation-board__message-container.reversed {
+  flex-direction: row-reverse;
+}
+#chat .chat__conversation-board__message-container.reversed .chat__conversation-board__message__bubble {
+  position: relative;
+}
+#chat .chat__conversation-board__message-container.reversed .chat__conversation-board__message__bubble span:not(:last-child) {
+  margin: 0 0 2em 0;
+}
+#chat .chat__conversation-board__message-container.reversed .chat__conversation-board__message__person {
+  margin: 0 0 0 1.2em;
+}
+#chat .chat__conversation-board__message-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+#chat .chat__conversation-board__message-container:hover .option-item:not(:last-child) {
+  margin: 0 0.5em 0 0;
+}
+#chat .chat__conversation-board__message-container:not(:last-child) {
+  margin: 0 0 2em 0;
+}
+#chat .chat__conversation-board__message__person {
+  text-align: center;
+  margin: 0 1.2em 0 0;
+}
+#chat .chat__conversation-board__message__person__avatar {
+  height: 35px;
+  width: 35px;
+  overflow: hidden;
+  border-radius: 50%;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  ms-user-select: none;
+  position: relative;
+}
+#chat .chat__conversation-board__message__person__avatar::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+#chat .chat__conversation-board__message__person__avatar img {
+  height: 100%;
+  width: auto;
+}
+#chat .chat__conversation-board__message__person__nickname {
+  font-size: 9px;
+  color: #484848;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  display: none;
+}
+#chat .chat__conversation-board__message__context {
+  max-width: 55%;
+  align-self: flex-end;
+}
+#chat .chat__conversation-board__message__bubble span {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: inline-table;
+  word-wrap: break-word;
+  background: var(--chat-bubble-background);
+  font-size: 13px;
+  color: var(--chat-text-color);
+  padding: 0.5em 0.8em;
+  line-height: 1.5;
+  border-radius: 6px;
+  font-family: "Lato", sans-serif;
+}
+#chat .chat__conversation-board__message__bubble:not(:last-child) {
+  margin: 0 0 0.3em;
+}
+#chat .chat__conversation-board__message__bubble:active {
+  background: var(--chat-bubble-active-background);
+}
+#chat .chat__conversation-panel {
+  background: var(--chat-panel-background);
+  border-radius: 12px;
+  padding: 0 1em;
+  height: 55px;
+  margin: 0.5em 0 0;
+}
+#chat .chat__conversation-panel__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+}
+#chat .chat__conversation-panel__container .panel-item:not(:last-child) {
+  margin: 0 1em 0 0;
+}
+#chat .chat__conversation-panel__button {
+  background: grey;
+  height: 20px;
+  width: 30px;
+  border: 0;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+}
+#chat .chat__conversation-panel .add-file-button {
+  height: 23px;
+  min-width: 23px;
+  width: 23px;
+  background: var(--chat-add-button-background);
+  border-radius: 50%;
+}
+#chat .chat__conversation-panel .add-file-button svg {
+  width: 70%;
+  stroke: #54575c;
+}
+#chat .chat__conversation-panel .emoji-button {
+  min-width: 23px;
+  width: 23px;
+  height: 23px;
+  background: transparent;
+  border-radius: 50%;
+}
+#chat .chat__conversation-panel .emoji-button svg {
+  width: 100%;
+  fill: transparent;
+  stroke: #54575c;
+}
+#chat .chat__conversation-panel .send-message-button {
+  background: var(--chat-send-button-background);
+  height: 30px;
+  min-width: 30px;
+  border-radius: 50%;
+  transition: 0.3s ease;
+}
+#chat .chat__conversation-panel .send-message-button:active {
+  transform: scale(0.97);
+}
+#chat .chat__conversation-panel .send-message-button svg {
+  margin: 1px -1px;
+}
+#chat .chat__conversation-panel__input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  position: relative;
+  color: var(--chat-text-color);
+  font-size: 13px;
+  background: transparent;
+  border: 0;
+  font-family: "Lato", sans-serif;
+  resize: none;
+}
+</style>
+
+<h1>Просмотр</h1>
+
+<h4>Заказ</h4>
+<hr />
+<div class="row-order">
+    <div class="col-order">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Order.Id" />
+        <div class="form-group">
+            <label asp-for="Order.User" class="control-label">Клиент</label>
+            <select disabled asp-for="Order.User" class="form-control" asp-items="ViewBag.User"></select>
+            <span asp-validation-for="Order.User" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Product" class="control-label">Продукт</label>
+            <select disabled asp-for="Order.Product" class="form-control" asp-items="ViewBag.Product"></select>
+            <span asp-validation-for="Order.Product" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.ProductType" class="control-label">Тип продукта</label>
+            <select disabled asp-for="Order.ProductType" class="form-control" asp-items="ViewBag.ProductType"></select>
+            <span asp-validation-for="Order.ProductType" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Date" class="control-label">Дата создания заказа</label>
+            <input disabled asp-for="Order.Date" class="form-control" />
+            <span asp-validation-for="Order.Date" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.LastUpdateDate" class="control-label">Дата последнего изменения</label>
+            <input disabled asp-for="Order.LastUpdateDate" class="form-control" />
+            <span asp-validation-for="Order.LastUpdateDate" class="text-danger"></span>
+        </div>
+        <div style="display: none;" class="form-group m-md-3">
+            <label asp-for="Order.IsFinish" class="control-label"></label>
+            <input disabled asp-for="Order.IsFinish" class="form-control" />
+            <span asp-validation-for="Order.IsFinish" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Score" class="control-label">Бонусы</label>
+            <input disabled asp-for="Order.Score" class="form-control" />
+            <span asp-validation-for="Order.Score" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.IsScoreAdd" class="control-label">Бонусы даются?</label>
+            @{
+                var isScoreText = Model.Order.IsScoreAdd == true ? "Да" : "Нет, списываются";
+            }
+            <div style="font-weight: bold; font-size: 18px;">@isScoreText</div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Phone" class="control-label">Телефон</label>
+            <input disabled asp-for="Order.Phone" class="form-control" />
+            <span asp-validation-for="Order.Phone" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Fio" class="control-label">Фио клиента</label>
+            <input disabled asp-for="Order.Fio" class="form-control" />
+            <span asp-validation-for="Order.Fio" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.City" class="control-label">Город</label>
+            <input disabled asp-for="Order.City" class="form-control" />
+            <span asp-validation-for="Order.City" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Street" class="control-label">Улица</label>
+            <input disabled asp-for="Order.Street" class="form-control" />
+            <span asp-validation-for="Order.Street" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.CardData" class="control-label">Промокод</label>
+            <input disabled asp-for="Order.PromocodeNavigation.Code" class="form-control" />
+            <span asp-validation-for="Order.PromocodeNavigation.Code" class="text-danger"></span>
+        </div>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="status" class="control-label">Статус</label>
+                <select asp-for="status" class="form-control">
+                    <option value="Оплачено">Оплачено</option>
+                    <option value="Отправлен">Отправлен</option>
+                    <option value="Менеджер скоро свяжется">Менеджер скоро свяжется</option>
+                    <option value="Завершено">Завершено</option>
+                    <option value="Отменено">Отменено</option>
+                </select>
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Изменить статус" class="btn btn-primary" />
+                <p class="text-danger">Внимание! Изменения статуса в админке отключает этот заказ от телеграм и удаляет сообщение о заказе в диалоге с менеджерами (чат на это не влияет)</p>
+            </div>
+        </form>
+    </div>
+    <div class="chat">
+        <h4>Чат</h4>
+        <div class="--dark-theme" id="chat">
+          <div class="chat__conversation-board">
+            @foreach (var item in Model.Order.OrderMessages)
+            {
+                @if (item.Admin != null) {
+                    <div class="chat__conversation-board__message-container reversed">
+                        <div class="chat__conversation-board__message__person">
+                            <div class="chat__conversation-board__message__person__avatar"><img src="https://static.tildacdn.com/tild6532-3236-4136-a436-323164633136/Profile_userpic.png" alt="@item.AdminNavigation.Username"/></div>
+                        </div>
+                        <div class="chat__conversation-board__message__context">
+                            <div class="chat__conversation-board__message__bubble"><span><label class="user-name-chat">@item.AdminNavigation.Username</label> (@item.Date.ToString())<br />@item.Message</span></div>
+                        </div>
+                    </div> 
+                }
+                else
+                {
+                <div class="chat__conversation-board__message-container">
+                    <div class="chat__conversation-board__message__person">
+                        <div class="chat__conversation-board__message__person__avatar"><img src="https://static.tildacdn.com/tild6532-3236-4136-a436-323164633136/Profile_userpic.png" alt="Клиент"/></div>
+                    </div>
+                    <div class="chat__conversation-board__message__context">
+                        <div class="chat__conversation-board__message__bubble">
+                            <span><label class="user-name-chat">Клиент</label> (@item.Date.ToString())<br />@item.Message</span>
+                        </div>
+                    </div>
+                </div> 
+                }
+            
+            }
+        
+          </div>
+          <div class="chat__conversation-panel">
+            <div class="chat__conversation-panel__container">
+              <input class="chat__conversation-panel__input panel-item" id="messageEditor" placeholder="Написать сообщение покупателю"/>
+              <button onclick="sendMessage()" class="chat__conversation-panel__button panel-item btn-icon send-message-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-reactid="1036">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Вернутся назад</a>
+</div>
+
+<script>
+    function sendMessage() {
+        var message = $("#messageEditor").val();
+        $.ajax({
+            url: '../api/producttypes/SendMessage',
+            type: 'GET',
+            contentType: 'application/json',
+            data: {
+                message: message,
+                orderid: "@Model.Order.Id"
+            },
+            success: function (data, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

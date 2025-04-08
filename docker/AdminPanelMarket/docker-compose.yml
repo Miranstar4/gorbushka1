@@ -1,0 +1,19 @@
+﻿version: '3'
+services:
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegramadminapp:latest
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - VIRTUAL_HOST=admin.hozyainduhi.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=admin.hozyainduhi.ru
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

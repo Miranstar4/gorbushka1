@@ -1,0 +1,62 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.link-default {
+    color: black;
+    text-decoration: auto;
+}
+.desktop .col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.desktop .card {
+    width: 18rem;
+}
+.table-images img, .image-enter {
+    max-width: 300px;
+    max-height: 100px;
+}
+.gray-tr {
+    border: 1px solid gray;
+}
+.row-order {
+    display: flex;
+}
+.col-order {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 60%;
+}
+.col-order .form-group {
+    margin-right: 10px;
+    min-width: 48%;
+    width: 48%;
+    margin-bottom: 5px;
+}
+.col-order form {
+    width: 100%;
+}
+.user-name-chat {
+    font-weight: bold;
+}
+.col-order form .text-danger {
+    font-size: 12px;
+}

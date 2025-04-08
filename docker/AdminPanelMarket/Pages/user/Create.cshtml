@@ -1,0 +1,98 @@
+﻿@page
+@model AdminPanelMarket.Pages.user.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="User.Id" class="control-label"></label>
+                <input asp-for="User.Id" class="form-control" />
+                <span asp-validation-for="User.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Username" class="control-label"></label>
+                <input asp-for="User.Username" class="form-control" />
+                <span asp-validation-for="User.Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Telegramid" class="control-label"></label>
+                <input asp-for="User.Telegramid" class="form-control" />
+                <span asp-validation-for="User.Telegramid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Phone" class="control-label"></label>
+                <input asp-for="User.Phone" class="form-control" />
+                <span asp-validation-for="User.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Fio" class="control-label"></label>
+                <input asp-for="User.Fio" class="form-control" />
+                <span asp-validation-for="User.Fio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Score" class="control-label"></label>
+                <input asp-for="User.Score" class="form-control" />
+                <span asp-validation-for="User.Score" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Lastimg" class="control-label"></label>
+                <input asp-for="User.Lastimg" class="form-control" />
+                <span asp-validation-for="User.Lastimg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Token" class="control-label"></label>
+                <input asp-for="User.Token" class="form-control" />
+                <span asp-validation-for="User.Token" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.DateRegister" class="control-label"></label>
+                <input asp-for="User.DateRegister" class="form-control" />
+                <span asp-validation-for="User.DateRegister" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Referal" class="control-label"></label>
+                <select asp-for="User.Referal" class ="form-control" asp-items="ViewBag.Referal"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.ReferalTracker" class="control-label"></label>
+                <input asp-for="User.ReferalTracker" class="form-control" />
+                <span asp-validation-for="User.ReferalTracker" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.IsActive" class="control-label"></label>
+                <input asp-for="User.IsActive" class="form-control" />
+                <span asp-validation-for="User.IsActive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.City" class="control-label"></label>
+                <input asp-for="User.City" class="form-control" />
+                <span asp-validation-for="User.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.Street" class="control-label"></label>
+                <input asp-for="User.Street" class="form-control" />
+                <span asp-validation-for="User.Street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

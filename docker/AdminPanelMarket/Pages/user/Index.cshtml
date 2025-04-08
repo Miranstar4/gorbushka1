@@ -1,0 +1,91 @@
+﻿@page
+@model AdminPanelMarket.Pages.user.IndexModel
+
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<h1>Пользователи</h1>
+<div class="row">
+    <div class="col">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">🔍</span>
+          <input type="text" class="form-control search-input" placeholder="Поиск...">
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Логин
+            </th>
+            <th>
+                ID Telegram
+            </th>
+            <th>
+                Телефон
+            </th>
+            <th>
+                ФИО
+            </th>
+            <th>
+                Бонусы
+            </th>
+            <th>
+                Дата регистрации
+            </th>
+            <th>
+                Город
+            </th>
+            <th>
+                Улица
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.User) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telegramid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateRegister)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Street)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script>
+    $(".search-input").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".table tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // Если поле поиска пустое, показываем все записи
+    $(".search-input").on("input", function() {
+        if ($(this).val().trim() === "") {
+            $(".table tr").show();
+        }
+    });
+</script>

@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ember-telegrapapp
+    volumes:
+      - ./dist:/var/www/public
+    environment:
+      - VIRTUAL_HOST=webapp.hozyainduhi.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=webapp.hozyainduhi.ru
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

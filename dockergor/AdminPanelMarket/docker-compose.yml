@@ -1,0 +1,20 @@
+﻿version: '3'
+services:
+  myapp-admin-gorbushka:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telegramadmin-gorbushka:latest
+    container_name: telegramadmin-gorbushka
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - VIRTUAL_HOST=admin.hozyaintelegram.ru
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=admin.hozyaintelegram.ru
+    expose:
+      - "80"
+networks:
+  default:
+    external:
+      name: nginx-proxy_default

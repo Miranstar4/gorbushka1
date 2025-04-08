@@ -1,0 +1,605 @@
+﻿@page
+@model AdminPanelMarket.Pages.product.EditModel
+
+@{
+    ViewData["Title"] = "Редактировать товар";
+}
+
+<h1>Редактировать</h1>
+<div>
+    <a asp-page="./Index">Вернутся назад</a>
+</div>
+<h4>Товар</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LastSubcategory" />
+            <input type="hidden" asp-for="Product.Id" />
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Subcategory" class="control-label">Подкатегория</label>
+                <select asp-for="Product.Subcategory" class="form-control" asp-items="ViewBag.Subcategory"></select>
+                <span asp-validation-for="Product.Subcategory" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Name" class="control-label">Наименование</label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Description" class="control-label">Описание (неиспользуется)</label>
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Cost" class="control-label">Цена</label>
+                <input asp-for="Product.Cost" class="form-control" />
+                <span asp-validation-for="Product.Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.Score" class="control-label">Баллы</label>
+                <input asp-for="Product.Score" class="form-control" />
+                <span asp-validation-for="Product.Score" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Product.DefaultColor" class="control-label">Цвет раскраски по умолчанию</label>
+                <input id="Product_DefaultColor" name="Product.DefaultColor" type="color" value="@Model.Product.DefaultColor" title="Выберите цвет" class="form-control form-control-color" />
+                <span asp-validation-for="Product.DefaultColor" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check m-md-3">
+                @Html.CheckBoxFor(m => m.Product.IsSell, new { @class = "form-check-input" })
+                <label asp-for="Product.IsSell" class="form-check-label">В продаже</label>
+                <span asp-validation-for="Product.IsSell" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <input type="submit" value="Сохранить изменения" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<h4>Изображения товара</h4>
+<hr />
+<div class="row">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Изображение</th>
+                <th>Порядок</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="images-tbody" id="ProductImages">
+            @foreach (var productImage in Model.ProductImages)
+            {
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control image-text" onchange="changeProductImage(this)" type="text" value="@productImage.Image" data-img-id="@productImage.Id" id='product-image-name-@productImage.Id' />
+                        </div>
+                    </td>
+                    <td>
+                        <img class="image-enter" src="https://backend.hozyaintelegram.ru/api/Categories/image/@productImage.Image">
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" onchange="changeProductImage(this)" type="number" value="@productImage.Order" data-img-id="@productImage.Id" id='product-image-order-@productImage.Id' />
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-img-id="@productImage.Id" onclick="changeImageMainProduct(this)">Выбрать изображение</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-img-id="@productImage.Id" onclick="deleteImage(this)">Удалить</button>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="button" onclick="addImageRow(this, null)">Добавить картинку</button>
+                </td>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<h4>Варианты товара</h4>
+<hr />
+<div class="row">
+        <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var productType in Model.ProductTypes)
+            {
+                <tr class="gray-tr">
+                    <td>
+                        <input type="hidden" name="id" data-type-id="@productType.Id" />
+                        <div class="form-group m-md-3">
+                            <label class="control-label" >Наименование</label>
+                            <input class="form-control" onchange="changeProductType(this)" name="name" value="@productType.Name" />
+                        </div>
+                        <div class="form-group m-md-3">
+                            <label class="control-label" >Цена</label>
+                            <input class="form-control" onchange="changeProductType(this)" name="cost" value="@productType.Cost" />
+                        </div>
+                        <div class="form-group m-md-3">
+                            <label class="control-label" >Бонусы</label>
+                            <input class="form-control" onchange="changeProductType(this)" name="score" value="@productType.Score" />
+                        </div>
+                        <div class="form-group m-md-3">
+                            <label class="control-label">Цвет раскраски по умолчанию</label>
+                            <input class="form-control form-control-color" onchange="changeProductType(this)" type="color" name="color" value="@productType.Color" />
+                        </div>
+                        <div class="row">
+                                <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Наименование</th>
+                                        <th>Изображение</th>
+                                        <th>Порядок</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="images-tbody">
+                                    @foreach (var productImage in productType.ProductImages)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input class="form-control image-text" name="isProductType" data-type-id="@productImage.ProductType" onchange="changeProductImage(this)" type="text" value="@productImage.Image" data-img-id="@productImage.Id" id='product-image-name-@productImage.Id' />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <img class="image-enter" src="https://backend.hozyaintelegram.ru/api/Categories/image/@productImage.Image">
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input class="form-control" name="isProductType" onchange="changeProductImage(this)" data-type-id="@productImage.ProductType" type="number" value="@productImage.Order" data-img-id="@productImage.Id" id='product-image-order-@productImage.Id' />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary" type="button" data-img-id="@productImage.Id" data-type-id="@productImage.ProductType" onclick="changeImageMainProduct(this)">Выбрать изображение</button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary" type="button" data-img-id="@productImage.Id" onclick="deleteImage(this)">Удалить</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-primary" type="button" name="isProductType" onclick="addImageRow(this, '@productType.Id')">Добавить картинку</button>
+                                        </td>
+                                        <td></td><td></td><td></td><td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-id="@productType.Id" onclick="deleteTypeProduct(this)">Удалить</button>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <p class="text-danger">Внимание! Добавление нового вида товара перезагрузит страницу</p>
+                    <button class="btn btn-primary" type="button" onclick="addNewProductType()">Добавить новый вид товара</button>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<h4>Характеристики товара</h4>
+<hr />
+<div class="row">
+        <div class="col">
+            <p class="text-danger">Внимание! Смена характеристик перезагрузит текущую страницу</p>
+        <button class="btn btn-primary" type="button" onclick="updateCharacteristic()">Обновить характеристики</button>
+        </div>
+        
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Характеристика</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var characteristicProduct in Model.CharacteristicProducts)
+            {
+                <tr>
+                    <td>@characteristicProduct.CharacteristicNavigation.Name</td>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" onchange="changeCharacteristic(this, '@characteristicProduct.Id', '@characteristicProduct.Characteristic')" type="text" value="@characteristicProduct.Description" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="form-group">
+        @if (Model.Product.ProductTops.Count > 0){
+            <input type="checkbox" checked onclick="checkedPokupatili(false)" />
+            <label class="control-label" >Выбор покупателей</label>
+        }
+        else
+        {
+            <input type="checkbox" onclick="checkedPokupatili(true)"/>
+            <label class="control-label" >Выбор покупателей</label>
+
+        }
+        <p class="text-danger">Внимание! Нажатие галки перезагрузит страницу</p>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group">
+        @if (Model.Product.IsDiscount == true){
+            <input type="checkbox" checked onclick="checkedDiscount(false)" />
+            <label class="control-label" >Бейджик акция</label>
+        }
+        else
+        {
+            <input type="checkbox" onclick="checkedDiscount(true)"/>
+            <label class="control-label" >Бейджик акция</label>
+
+        }
+        <p class="text-danger">Внимание! Нажатие галки перезагрузит страницу</p>
+    </div>
+</div>
+<!-- Модалка -->
+<div class="modal fade" id="modalFiles" tabindex="-1" aria-labelledby="modalFilesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Выберите картинку</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-images">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.files) {
+                    <tr>
+                        <td>
+                            @item
+                        </td>
+                        <td>
+                            <img src="https://backend.hozyaintelegram.ru/api/Categories/image/@item">
+                        </td>
+                        <td>
+                            <button type="button" onclick="clickEnter('@item');" class="btn btn-primary">Выбрать</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-close-html" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+    var modalFiles = new bootstrap.Modal(document.getElementById('modalFiles'));
+    function changeImageMainProduct(row) {
+        imageRow = row;
+        modalFiles.show();
+    }
+    var imageRow = undefined;
+    function clickEnter(text) {
+        $(imageRow).closest('tr').find('.image-text').val(text);
+        $(imageRow).closest('tr').find('.image-enter').attr("src","https://backend.hozyaintelegram.ru/api/Categories/image/"+text);
+        changeProductImage($(imageRow).closest('tr').find('.image-text'));
+        modalFiles.hide();
+    }
+    function changeProductImage(row) {
+        var id = $(row).data('img-id');
+        let order = $(row).closest('tr').find('#product-image-order-' + id).val(),
+            name = $(row).closest('tr').find('#product-image-name-' + id).val(),
+            type = $(row).data('type-id'),
+            product = '@Model.Product.Id',
+            productType = null;
+
+        if ($(row).attr('name') == 'isProductType') {
+            product = null;
+            productType = $(row).data('type-id');
+        }
+        if (type != null && type != undefined) {
+            product = null;
+        }
+
+        $.ajax({
+            url: '../api/productimages/'+id,
+            type: 'PUT',
+            data: JSON.stringify({
+                image: name,
+                product: product,
+                productType: productType,
+                order: order,
+                productType: type,
+                id: id
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                showSaveToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function deleteImage(row) {
+        var id = $(row).data('img-id');
+        $.ajax({
+            url: '../api/productimages/'+id,
+            type: 'DELETE',
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                $(row).closest('tr').remove();
+                showDeleteToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function addImageRow(row, productType) {
+        var data;
+        if (productType != null) {
+            data = JSON.stringify({
+                image: undefined,
+                productType: productType
+            });
+        }
+        else {
+            data = JSON.stringify({
+                image: undefined,
+                product: '@Model.Product.Id'
+            });
+        }
+
+        $.ajax({
+            url: '../api/productimages',
+            type: 'POST',
+            data: data,
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                if (xhr.status != 401) {
+                    var newRowHtml;
+                    if (data.productType != null) {
+                        newRowHtml = `
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <input class="form-control image-text" name="isProductType" data-type-id="`+data.productType+`" onchange="changeProductImage(this)" type="text" value="`+data.image+`" data-img-id="`+data.id+`" id='product-image-name-`+data.id+`' />
+                                    </div>
+                                </td>
+                                <td>
+                                    <img class="image-enter" src="https://backend.hozyaintelegram.ru/api/Categories/image/`+data.image+`.Image">
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input class="form-control" name="isProductType" data-type-id="`+data.productType+`" onchange="changeProductImage(this)" type="number" value="`+data.order+`" data-img-id="`+data.id+`" id='product-image-order-`+data.id+`' />
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" name="isProductType" data-type-id="`+data.productType+`" type="button" data-img-id="`+data.id+`" onclick="changeImageMainProduct(this)">Выбрать изображение</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" name="isProductType" data-type-id="`+data.productType+`" type="button" data-img-id="`+data.id+`" onclick="deleteImage(this)">Удалить</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-primary" name="isProductType" data-type-id="`+data.productType+`" type="button" onclick="addImageRow(this, `+data.productType+`)"">Добавить картинку</button>
+                                </td>
+                                <td></td><td></td><td></td><td></td>
+                            </tr>
+                        `;
+                    }
+                    else {
+                        newRowHtml = `
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <input class="form-control image-text" onchange="changeProductImage(this)" type="text" value="`+data.image+`" data-img-id="`+data.id+`" id='product-image-name-`+data.id+`' />
+                                    </div>
+                                </td>
+                                <td>
+                                    <img class="image-enter" src="https://backend.hozyaintelegram.ru/api/Categories/image/`+data.image+`.Image">
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input class="form-control" onchange="changeProductImage(this)" type="number" value="`+data.order+`" data-img-id="`+data.id+`" id='product-image-order-`+data.id+`' />
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" type="button" data-img-id="`+data.id+`" onclick="changeImageMainProduct(this)">Выбрать изображение</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" type="button" data-img-id="`+data.id+`" onclick="deleteImage(this)">Удалить</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-primary" type="button" onclick="addImageRow(this, null)">Добавить картинку</button>
+                                </td>
+                                <td></td><td></td><td></td><td></td>
+                            </tr>
+                        `;
+                    }
+                    
+                    $(row).closest('.images-tbody').append(newRowHtml);
+                    $(row).closest('tr').remove();
+                }
+            },
+            error: function (xhr, status, e) {
+            console.error(e);
+            },
+        });
+    }
+    
+    function changeProductType(row) {
+        var name = $(row).closest('tr').find('input[name="name"]').val(),
+            cost = $(row).closest('tr').find('input[name="cost"]').val(),
+            score = $(row).closest('tr').find('input[name="score"]').val(),
+            color = $(row).closest('tr').find('input[name="color"]').val();
+            typeId = $(row).closest('tr').find('input[name="id"]').data('type-id'),
+            product = '@Model.Product.Id';
+
+        $.ajax({
+            url: '../api/productTypes/'+typeId,
+            type: 'PUT',
+            data: JSON.stringify({
+                name: name,
+                cost: cost,
+                score: score,
+                color: color,
+                id: typeId,
+                product: product
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                showSaveToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function addNewProductType() {
+        let data = JSON.stringify({
+            product: '@Model.Product.Id'
+        });
+        $.ajax({
+            url: '../api/productTypes',
+            type: 'POST',
+            data: data,
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (xhr, status, e) {
+            console.error(e);
+            },
+        });
+    }
+
+    function changeCharacteristic(row, id, characteristic) {
+        var text = $(row).val();
+
+        $.ajax({
+            url: '../api/characteristicProducts/'+id,
+            type: 'PUT',
+            data: JSON.stringify({
+                description: text,
+                id: id,
+                characteristic: characteristic,
+                product: '@Model.Product.Id'
+            }),
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                showSaveToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function deleteTypeProduct(row) {
+        var id = $(row).data('id');
+        $.ajax({
+            url: '../api/producttypes/'+id,
+            type: 'DELETE',
+            contentType: 'application/json',
+            success: function (data, textStatus, xhr) {
+                $(row).closest('tr').remove();
+                showDeleteToast();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+
+    function checkedPokupatili(check) {
+        $.ajax({
+            url: '../api/producttypes/CheckPokupatel',
+            type: 'GET',
+            contentType: 'application/json',
+            data: {
+                check: check,
+                productid: "@Model.Product.Id"
+            },
+            success: function (data, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    }
+    
+    function checkedDiscount(check) {
+        $.ajax({
+            url: '../api/producttypes/CheckDiscount',
+            type: 'GET',
+            contentType: 'application/json',
+            data: {
+                check: check,
+                productid: "@Model.Product.Id"
+            },
+            success: function (data, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    } 
+
+    function updateCharacteristic() {
+        $.ajax({
+            url: '../api/producttypes/UpdateCharacteristic',
+            type: 'GET',
+            contentType: 'application/json',
+            data: {
+                productid: "@Model.Product.Id"
+            },
+            success: function (data, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (xhr, status, e) {
+                console.error(e);
+            },
+        });
+    } 
+</script>

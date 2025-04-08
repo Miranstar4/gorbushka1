@@ -1,0 +1,54 @@
+﻿@page
+@model AdminPanelMarket.Pages.subcategory.CreateModel
+
+@{
+    ViewData["Title"] = "Создать подкатегорию";
+}
+
+<h1>Создать</h1>
+
+<h4>Подкатегория</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group m-md-3">
+                @if (false) {
+                <label asp-for="Subcategory.Category" class="control-label">Категория</label>
+                <input asp-for="Subcategory.Category" class="form-control" onchange="changeinput(this)" list="datalistOptions" id="dataListCategory" placeholder="Type to search..." />
+                <label id="CategoryVisibleName"></label>
+                <datalist id="datalistOptions">
+                </datalist>
+                }
+                <div class="form-group">
+                    <label asp-for="Subcategory.Category" class="control-label">Категория</label>
+                    <select asp-for="Subcategory.Category" class="form-control" asp-items="ViewBag.Category"></select>
+                    <span asp-validation-for="Subcategory.Category" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group m-md-3">
+                <label asp-for="Subcategory.Name" class="control-label">Наименование</label>
+                <input asp-for="Subcategory.Name" class="form-control" />
+                <span asp-validation-for="Subcategory.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group m-md-3">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Вернутся назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+/*function changeinput(input) {
+    let currentValue = $(input).val();
+    $('#CategoryVisibleName').html($('#datalistOptions').find('option[value="' + currentValue+'"]').text());
+}*/
+</script>

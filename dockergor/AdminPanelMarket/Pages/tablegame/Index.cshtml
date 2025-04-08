@@ -1,0 +1,41 @@
+﻿@page
+@model AdminPanelMarket.Pages.tablegame.IndexModel
+@{
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Логин
+            </th>
+            <th>
+                Счёт
+            </th>
+            <th>
+                Пояс
+            </th>
+            <th>
+                Количество срубленных деревьев
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.gameUser) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Login)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Belt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Woods)
+            </td>
+        </tr>
+       }
+    </tbody>
+</table>
