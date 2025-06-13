@@ -713,7 +713,7 @@ public class TelegramBotController : ControllerBase
                 gameShortName,
                 replyMarkup: new[]
                 {
-                        InlineKeyboardButton.WithCallBackGame(text: gameTextBtn),
+                        InlineKeyboardButton.WithCallbackGame(text: gameTextBtn),
                 });
             return Ok();
         }

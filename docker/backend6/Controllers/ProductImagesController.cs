@@ -76,7 +76,12 @@ namespace backend6.Controllers
             {
                 if (file != null && file.Length > 0)
                 {
-                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "images", filename + ".png");
+                    var imagesDir = Path.Combine(Directory.GetCurrentDirectory(), "images");
+                    if (!Directory.Exists(imagesDir))
+                    {
+                        Directory.CreateDirectory(imagesDir);
+                    }
+                    var imagePath = Path.Combine(imagesDir, filename + ".png");
 
                     using (var stream = System.IO.File.Create(imagePath))
                     {

@@ -577,7 +577,7 @@ namespace backend6.Controllers
                     gameShortName,
                     replyMarkup: new[]
                     {
-                        InlineKeyboardButton.WithCallBackGame(text: gameTextBtn),
+                        InlineKeyboardButton.WithCallbackGame(text: gameTextBtn),
                     });
                 return Ok();
             }
